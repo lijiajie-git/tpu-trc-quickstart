@@ -1,6 +1,6 @@
 ---
 name: tpu-trc-setup
-description: End-to-end workflow to go from zero to running on a free TRC TPU (delegated to AI). Triggers: "TRC TPU setup", "queue a TPU", "set up a TPU with TRC quota", "TPU setup". Works for anyone who has obtained a TPU Research Cloud quota — hand this file to Claude Code / Codex / any AI and it can run the whole thing from the command line, no need to touch the Google Cloud web console.
+description: 'End-to-end workflow to go from zero to running on a free TRC TPU (delegated to AI). Triggers: "TRC TPU setup", "queue a TPU", "set up a TPU with TRC quota", "TPU setup". Works for anyone who has obtained a TPU Research Cloud quota — hand this file to Claude Code / Codex / any AI and it can run the whole thing from the command line, no need to touch the Google Cloud web console.'
 license: MIT
 compatibility: Requires gcloud (with alpha + beta components) + macOS/Linux bash + a GCP project that has been granted a TRC quota (Editor role is enough)
 metadata:
