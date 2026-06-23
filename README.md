@@ -30,6 +30,19 @@ This repo solidifies the whole flow into an **AI work instruction sheet** + a **
 - `AGENTS.md` — entry point for Codex / other agents (points to `SKILL.md`)
 - `scripts/tpu_stats.sh` — aggregates the incident log into a summary you can paste to TRC (see "Feedback to TRC" below)
 
+## Install
+
+**As a Claude Code plugin (recommended):**
+
+```
+/plugin marketplace add lijiajie-git/tpu-trc-quickstart
+/plugin install tpu-trc-setup@tpu-trc-quickstart
+```
+
+**Or as a drop-in skill folder:** copy this repo into `~/.claude/skills/tpu-trc-setup/`.
+
+**Codex / other AIs:** just paste `SKILL.md` into the conversation — no install needed.
+
 ## Three-step getting started
 
 1. **Fill the config**: copy `resources.conf.template` → `resources.conf`, fill in your project ID, email, zone.

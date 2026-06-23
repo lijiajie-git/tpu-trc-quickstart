@@ -1,0 +1,12 @@
+{
+  "name": "tpu-trc-setup",
+  "description": "AI-driven TRC TPU provisioning skill (queue -> claim -> SSH -> health check; provision-only, installs no deps)",
+  "version": "1.0.0",
+  "author": {
+    "name": "lijiajie-git"
+  },
+  "homepage": "https://github.com/lijiajie-git/tpu-trc-quickstart",
+  "repository": "https://github.com/lijiajie-git/tpu-trc-quickstart",
+  "license": "MIT",
+  "keywords": ["tpu", "trc", "tpu-research-cloud", "jax", "gcp", "provisioning"]
+}
