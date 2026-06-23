@@ -13,7 +13,7 @@ Field experience contributions are welcome. The content of this repo drifts with
 
 ## Rules
 
-- **Run shellcheck on daemon changes first**, and keep them **bash 3.2 compatible** (the version bundled with macOS has no `declare -A`, no `timeout`). CI runs `shellcheck scripts/tpu_daemon.sh`.
+- **Run shellcheck on script changes first** (locally — there is no CI), and keep them **bash 3.2 compatible** (the version bundled with macOS has no `declare -A`, no `timeout`).
 - **Time-sensitive assertions carry a date**: when writing "field-tested X", note the SDK version + date (this feeds the last-verified field in `CHANGELOG.md`).
 - **Do not include any real credentials / project ID / email**: `resources.conf` is already in `.gitignore`; use `<PLACEHOLDER>` or `example-*` in PRs.
 - Style: Chinese-primary, English commands; terse, tables first, data first.
