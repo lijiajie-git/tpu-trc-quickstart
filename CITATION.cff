@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this in research, please cite it."
+title: "tpu-trc-quickstart: an AI-driven TRC TPU provisioning skill"
+abstract: >-
+  A command-line, AI-agent-driven quickstart for provisioning Google TPU Research
+  Cloud (TRC) free TPUs (queue, claim, SSH, health check) without touching the GCP
+  console. Distilled and sanitized from a real research project (an
+  agent-based simulator, MATLAB to JAX/TPU port).
+authors:
+  - given-names: Jiajie
+    family-names: Li
+    affiliation: "University of Southern California"
+license: MIT
+version: "1.0"
+date-released: "2026-06-11"
+keywords:
+  - tpu
+  - tpu-research-cloud
+  - trc
+  - jax
+  - gcp
+  - claude-code
+  - agent-skill

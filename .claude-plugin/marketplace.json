@@ -1,0 +1,16 @@
+{
+  "name": "tpu-trc-quickstart",
+  "owner": "lijiajie-git",
+  "metadata": {
+    "version": "1.0",
+    "description": "AI-driven TRC TPU provisioning skill"
+  },
+  "plugins": [
+    {
+      "name": "tpu-trc-setup",
+      "source": "./",
+      "description": "Hand off the queue -> grab -> connect -> environment setup of TRC free TPUs to an AI command line",
+      "skills": ["./"]
+    }
+  ]
+}

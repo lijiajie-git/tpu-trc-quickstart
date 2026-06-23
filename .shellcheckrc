@@ -1,0 +1,4 @@
+# Intentional, the following checks are turned off:
+# SC2086: $extra intentionally unquoted (it holds multiple flags, word splitting needed)
+# SC1090/SC1091: dynamically source resources.conf (path determined at runtime)
+disable=SC2086,SC1090,SC1091

@@ -1,0 +1,15 @@
+# Your filled-in real config (contains project ID / email / resource names, don't commit)
+resources.conf
+
+# daemon runtime artifacts
+*.log
+/tmp/tpu_*
+
+# macOS
+.DS_Store
+
+# Any credentials (this tool shouldn't have them, double safeguard)
+*.json.key
+*-key.json
+credentials*
+.env

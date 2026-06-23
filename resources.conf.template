@@ -1,0 +1,68 @@
+# resources.conf — TPU resource registry (copy this file to resources.conf, then fill it in)
+#
+# `source`d by scripts/tpu_daemon.sh; SKILL.md also references the constants here. Pure shell, source-able
+# (bash 3.2 compatible, no yq/python dependency). Replace every <angle-bracket> with your value.
+
+# ── Identity ──────────────────────────────────────────────────────────
+TPU_PROJECT="<YOUR_PROJECT_ID>"
+TPU_ACCOUNT="<YOUR_EMAIL>"
+QUOTA_VERIFIED_DATE="<date quota was last verified, e.g. 2026-06-11>"
+
+# ── Safety boundary ─────────────────────────────────────────────────────
+# mutating ops (create/delete/re-queue) are only allowed on resources whose name matches this glob; all others are rejected.
+# In a shared project this prevents accidentally deleting someone else's TPU. Recommend prefixing all resource names with your prefix, e.g. *-alice-*.
+TPU_OWNER_PATTERN="*-<your prefix>-*"
+
+# ── External IP quota (per region) ─────────────────────────────────────
+# Default 8; v5e-64 / v6e-64 need 16 hosts → --internal-ips required. Check:
+#   gcloud compute project-info describe --project="$TPU_PROJECT" \
+#     --format="table(quotas.filter(metric:IN_USE_ADDRESSES))"
+TPU_EXTERNAL_IP_QUOTA=8
+
+# ── Default fanout targets (fill 1~N entries; multiple zones improve claim rate) ──────────────
+# Fields (| separated):
+#   zone | qr | vm | accel_type | runtime | workers | provmodel | internal_ips | has_quota | quota_value | verified
+#
+# accel_type / runtime reference (SKILL.md §5 command matrix):
+#   v4-32   : v4-32        | tpu-ubuntu2204-base | 4  worker | internal_ips=no
+#   v5e-64  : v5litepod-64 | v2-alpha-tpuv5-lite | 16 worker | internal_ips=yes
+#   v6e-64  : v6e-64       | v2-alpha-tpuv6e     | 16 worker | internal_ips=yes
+#
+# provmodel: SPOT (preemptible quota) or guaranteed (on-demand quota)
+# has_quota: whether this zone has per-zone quota (check via SKILL.md §5.5); zones marked no/unknown will always FAIL when queued, so they are excluded from fanout
+TPU_TARGETS_V5=(
+  "<zone1>|<qr1>|<vm1>|v5litepod-64|v2-alpha-tpuv5-lite|16|SPOT|yes|yes|64|<date>"
+  "<zone2>|<qr2>|<vm2>|v5litepod-64|v2-alpha-tpuv5-lite|16|SPOT|yes|yes|64|<date>"
+)
+
+# ── on-demand fallback (optional, not preempted by spot) ────────────────────────────
+TPU_TARGET_V4="<zone>|<qr>|<vm>|v4-32|tpu-ubuntu2204-base|4|guaranteed|no|unknown|-|unverified"
+
+# ── What to do after claiming (optional) ──────────────────────────────────────
+# After the daemon claims the node + SSH is reachable + the health check passes, it runs this command (leave empty = health check only, no dependency install — you install your own).
+# Example: sync your code up and run a smoke test. $VM / $ZONE / $WORKER_COUNT are already exported.
+TPU_SETUP_CMD=""
+
+# ── Do not take over a VM with a running job (optional, safety) ─────────────────────────────
+# Empty = no check. Set a pgrep pattern: if a matching process is running on VM worker0, the daemon will not take over that VM
+# (prevents setup from interfering with your running training).
+# ★ Must use the bracket form (otherwise pgrep -f matches its own SSH shell layer and is always a false positive):
+#   for train.py → set TPU_BUSY_PATTERN="[t]rain\.py"
+#   for python3 driver → set TPU_BUSY_PATTERN="python3 [d]river"
+TPU_BUSY_PATTERN=""
+
+# ── Incident logging (for Google TRC feedback statistics, on by default) ──────────────────────
+# On every queue incident (capacity / quota / billing / spot preemption) plus a successful claim, the daemon automatically appends a line to
+# this TSV (including disposition). Empty = no logging. scripts/tpu_stats.sh aggregates it into a summary you can paste to TRC.
+# This helps you fulfill TRC's obligation to "publicly report your usage experience," and helps TRC see which zones have capacity/quota problems.
+TPU_INCIDENT_LOG="$HOME/.tpu_trc_incidents.tsv"
+
+# ── QR lifetime (official --valid-until-duration, prevents orphan QRs from hanging forever and holding slots) ────────
+# Sets a lifetime for each queued QR: if not claimed by the deadline, the cloud auto-cancels it. The daemon runs 6h; setting 12h = pure orphan protection. Empty = unset.
+TPU_QR_VALID_DURATION="12h"
+
+# ── Runtime quota re-check (run manually when you suspect has_quota is stale) ──────────────────────
+# gcloud beta quotas info describe TPUV5sPreemptibleLitepodPerProjectPerZoneForTPUAPI \
+#   --service=tpu.googleapis.com --project="$TPU_PROJECT" \
+#   --format="yaml(quotaId,dimensionsInfos)"
+# value:'64'=enough for one slice / '0'=explicit zero / details:{} (missing)=not granted

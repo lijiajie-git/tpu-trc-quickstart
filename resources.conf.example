@@ -1,0 +1,38 @@
+# resources.conf.example — filled-in real sample (copy this and change to your values, save as resources.conf)
+#
+# For the placeholder version see resources.conf.template. The project ID/email in this file are fake (example-*),
+# but the zone / model / runtime / worker count / provmodel are all real values you can copy as-is.
+
+# ── identity ──────────────────────────────────────────────────────────
+TPU_PROJECT="example-proj"                 # ← change to your GCP project ID
+TPU_ACCOUNT="you@example.com"              # ← change to your Google account
+QUOTA_VERIFIED_DATE="2026-06-11"
+
+# ── safety boundary (all resource names carry your prefix) ──────────────────────
+TPU_OWNER_PATTERN="*-me-*"                 # ← your resources are all named like tpu-v5e-64-qr-me-*
+
+# ── external IP quota ─────────────────────────────────────────────────
+TPU_EXTERNAL_IP_QUOTA=8
+
+# ── default fanout: dual-zone v5e-64 SPOT (higher claim rate; once one is claimed the other is auto-canceled) ──
+# fields: zone|qr|vm|accel_type|runtime|workers|provmodel|internal_ips|has_quota|quota_value|verified
+TPU_TARGETS_V5=(
+  "europe-west4-b|tpu-v5e-64-qr-me-eu-b|tpu-v5e-64-vm-me-eu-b|v5litepod-64|v2-alpha-tpuv5-lite|16|SPOT|yes|yes|64|2026-06-11"
+  "us-central1-a|tpu-v5e-64-qr-me-us-a|tpu-v5e-64-vm-me-us-a|v5litepod-64|v2-alpha-tpuv5-lite|16|SPOT|yes|yes|64|2026-06-11"
+)
+
+# ── on-demand fallback (not preempted by spot, fewer chips) ─────────────────────────
+TPU_TARGET_V4="us-central2-b|tpu-v4-32-qr-me-od|tpu-v4-32-vm-me-od|v4-32|tpu-ubuntu2204-base|4|guaranteed|no|unknown|-|unverified"
+
+# ── what to do after claiming (empty = health check only, install nothing) ──────────────────────
+# e.g.: sync code and run smoke. $VM / $ZONE / $WORKER_COUNT are already exported.
+TPU_SETUP_CMD=""
+
+# ── do not take over a VM that is running a job (empty = no check; use bracket form like [t]rain\.py) ──
+TPU_BUSY_PATTERN=""
+
+# ── incident logging (feedback to TRC, on by default) ─────────────────────────────────
+TPU_INCIDENT_LOG="$HOME/.tpu_trc_incidents.tsv"
+
+# ── QR lifetime (official --valid-until-duration, orphans self-clean; empty = not set) ──────────
+TPU_QR_VALID_DURATION="12h"
