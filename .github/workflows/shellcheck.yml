@@ -3,10 +3,12 @@ on:
   push:
     paths:
       - "scripts/**"
+      - ".shellcheckrc"
       - ".github/workflows/shellcheck.yml"
   pull_request:
     paths:
       - "scripts/**"
+      - ".shellcheckrc"
   workflow_dispatch:
 
 jobs:

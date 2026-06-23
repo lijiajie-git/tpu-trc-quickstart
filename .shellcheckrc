@@ -1,4 +1,6 @@
-# Intentional, the following checks are turned off:
-# SC2086: $extra intentionally unquoted (it holds multiple flags, word splitting needed)
-# SC1090/SC1091: dynamically source resources.conf (path determined at runtime)
-disable=SC2086,SC1090,SC1091
+# Intentional — the following checks are turned off:
+# SC2086: $extra intentionally unquoted (holds multiple flags; word splitting needed)
+# SC2254: $OWNER_PAT in `case` is an intentional glob (owner-pattern allowlist), not a literal match
+# SC2004: $/${} inside $(( )) is a deliberate readability choice (harmless style nit)
+# SC1090/SC1091: resources.conf is sourced dynamically (path resolved at runtime)
+disable=SC2086,SC2254,SC2004,SC1090,SC1091
